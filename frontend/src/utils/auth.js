@@ -12,7 +12,7 @@ export const checkAuthentication = async () => {
   }
 
   try {
-    const response = await axios.get(`${config.API_BASE_URL}/v1/users/is_logged_in`, {
+    const response = await axios.get(config.IS_LOGGED_IN_URL, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -21,6 +21,30 @@ export const checkAuthentication = async () => {
     return response.data.logged_in === true;
   } catch (error) {
     console.error('Error checking authentication:', error);
+    return false;
+  }
+};
+
+/**
+ * Checks if the user is an admin by fetching the user's details and verifying the role.
+ * @returns {Promise<boolean>} A promise that resolves to a boolean indicating admin authentication status.
+ */
+export const checkAdminAuthentication = async () => {
+  const token = localStorage.getItem('zs_token');
+  if (!token) {
+    return false;
+  }
+
+  try {
+    const response = await axios.get(`${config.API_BASE_URL}/v1/users/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    return response.data.role === 'admin';
+  } catch (error) {
+    console.error('Error checking admin authentication:', error);
     return false;
   }
 };
@@ -46,6 +70,8 @@ export const loginUser = async (username, password) => {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
+    // Save the token to localStorage
+    localStorage.setItem('zs_token', response.data.access_token);
     return response.data;
   } catch (error) {
     console.error('Login failed:', error.response ? error.response.data : error);
@@ -73,4 +99,11 @@ export const registerUser = async (firstName, lastName, email, password) => {
     console.error('Registration failed:', error.response ? error.response.data : error);
     throw error;
   }
+};
+
+/**
+ * Logs out the user by removing the token from localStorage.
+ */
+export const logoutUser = () => {
+  localStorage.removeItem('zs_token');
 }; 

@@ -21,7 +21,10 @@ const config = {
   RESET_PASSWORD_URL: `${API_BASE_URL}/v1/password-reset`,
   RESET_PASSWORD_CONFIRM_URL: `${API_BASE_URL}/v1/reset-password`,
   IS_LOGGED_IN_URL: `${API_BASE_URL}/v1/users/is_logged_in`,
-  LOGOUT_EVERYWHERE_URL: `${API_BASE_URL}/v1/users/logout`,
+  LOGOUT_URL: `${API_BASE_URL}/v1/users/logout`,
+  // Admin-specific URLs
+  ADMIN_PENDING_USERS_URL: `${API_BASE_URL}/v1/admin/pending-users`,
+  ADMIN_ACTIVATE_USER_URL: (userId) => `${API_BASE_URL}/v1/admin/activate-user/${userId}`,
 };
 
-export default config; 
+export default config;

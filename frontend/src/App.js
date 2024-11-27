@@ -5,6 +5,7 @@ import SignUp from './components/SignUp';
 import Logout from './components/Logout';
 import Dashboard from './components/Dashboard';
 import RedirectToDashboard from './components/RedirectToDashboard';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
 
         {/* Protected Routes */}
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
 
         {/* Add more routes as needed */}
       </Routes>

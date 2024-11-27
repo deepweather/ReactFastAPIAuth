@@ -58,14 +58,13 @@ def activate_user(
     db.refresh(db_user)
     return db_user
 
-@router.get("/pending-users", response_model=List[int])
+@router.get("/pending-users", response_model=List[schemas.UserOut])
 def get_pending_users(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_admin_user)
 ):
     pending_users = db.query(models.User).filter(models.User.status != 'active').all()
-    user_ids = [user.id for user in pending_users]
-    return user_ids
+    return pending_users
 
 @router.post("/create-user", response_model=schemas.UserInDB)
 def create_user(
