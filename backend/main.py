@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from backend.database import SessionLocal, engine, Base
-from backend.routes import users, auth
+from backend.routes import users, auth, admin
 from backend import config, utils, models
 
 Base.metadata.create_all(bind=engine)
@@ -40,3 +40,4 @@ app.add_middleware(
 
 app.include_router(users.router, prefix="/v1/users")
 app.include_router(auth.router, prefix="/v1/auth")
+app.include_router(admin.router, prefix="/v1/admin")
