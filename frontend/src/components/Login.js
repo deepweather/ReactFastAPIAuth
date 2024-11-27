@@ -46,7 +46,7 @@ function Login() {
       setMessage('Login successful! Redirecting to dashboard...');
       setMessageType('success');
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate('/');
       }, 1000);
     } catch (error) {
       console.error('Login failed:', error.response ? error.response.data : error);

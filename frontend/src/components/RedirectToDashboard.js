@@ -1,16 +1,20 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { checkAuthentication } from '../utils/auth';
+import { getCurrentUser } from '../utils/auth';
 
 function RedirectToDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const redirect = async () => {
-      const isAuthenticated = await checkAuthentication();
+      const user = await getCurrentUser();
 
-      if (isAuthenticated) {
-        navigate('/dashboard');
+      if (user) {
+        if (user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
       } else {
         navigate('/login');
       }

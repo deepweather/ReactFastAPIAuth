@@ -106,4 +106,77 @@ export const registerUser = async (firstName, lastName, email, password) => {
  */
 export const logoutUser = () => {
   localStorage.removeItem('zs_token');
+};
+
+/**
+ * Fetches the current user's details.
+ * @returns {Promise<Object|null>} A promise that resolves to the user object if authenticated, or null if not authenticated.
+ */
+export const getCurrentUser = async () => {
+  const token = localStorage.getItem('zs_token');
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const response = await axios.get(`${config.API_BASE_URL}/v1/users/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    return response.data; // User object containing details like role
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+    return null;
+  }
+};
+
+/**
+ * Updates the user's information.
+ * @param {number} userId - The user's ID.
+ * @param {Object} userData - The user data to update (e.g., { name, email, password }).
+ * @returns {Promise<Object>} A promise that resolves to the updated user data.
+ */
+export const updateUser = async (userId, userData) => {
+  const token = localStorage.getItem('zs_token');
+  if (!token) {
+    throw new Error('Not authenticated');
+  }
+
+  try {
+    const response = await axios.put(`${config.API_BASE_URL}/v1/users/${userId}`, userData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    return response.data; // Updated user object
+  } catch (error) {
+    console.error('Error updating user:', error.response ? error.response.data : error);
+    throw error;
+  }
+};
+
+/**
+ * Deletes the user account.
+ * @param {number} userId - The user's ID.
+ * @returns {Promise<void>} A promise that resolves when the user is deleted.
+ */
+export const deleteUser = async (userId) => {
+  const token = localStorage.getItem('zs_token');
+  if (!token) {
+    throw new Error('Not authenticated');
+  }
+
+  try {
+    await axios.delete(`${config.API_BASE_URL}/v1/users/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    // Remove token and perform any necessary cleanup
+    logoutUser();
+  } catch (error) {
+    console.error('Error deleting user:', error.response ? error.response.data : error);
+    throw error;
+  }
 }; 

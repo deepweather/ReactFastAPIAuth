@@ -130,3 +130,22 @@ def delete_user(
     db.delete(db_user)
     db.commit()
     return {"detail": "User deleted successfully"}
+
+@router.get("/users", response_model=List[int])
+def get_all_user_ids(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_admin_user)
+):
+    user_ids = db.query(models.User.id).all()
+    return [id_tuple[0] for id_tuple in user_ids]
+
+@router.get("/users/{user_id}", response_model=schemas.UserInDB)
+def get_user_by_id(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_admin_user)
+):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
