@@ -1,0 +1,12 @@
+fastapi
+jose
+sqlalchemy
+passlib[bcrypt]
+passlib
+bcrypt
+python-jose
+pydantic
+uvicorn
+email-validator
+pydantic[email]
+fastapi-mail
